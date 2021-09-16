@@ -14,12 +14,14 @@ def start():
 
     print("Connection à", IP, " sur le port", PORT, "...")
     socket.connect((IP, PORT))
-    client = Client(socket, socket)
-    print("Le client a démarré, début de la discution !")
-
-    while (True):
-        message = socket.recv(BUFF_SIZE)
-        client.on_message_received(message)
+    name = input("Insérez un pseudo :")
+    client = Client(name, socket)
+    print("Le client a démarré, début de la discution !\n")
+    socket.send(str.encode(name + " s'est connecté.", "UTF-8"))
+    while True:
+        message = input()
+        client.send_message(bytes(message, "UTF-8"))
+        print("Vous avez envoyé : " + message)
 
 
 if __name__ == '__main__':

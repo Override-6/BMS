@@ -1,16 +1,14 @@
-from Network.Server.Server import Server
-import threading
 import socket as sock
 
-BUFF_SIZE = 2024
+from Network.MessageChannel import MessageChannel
+from Network.Server.Server import Server
 
-class ServerConnection:
-    def __init__(self, socket: sock.socket):
-        self.socket = socket
 
-    def message_loop(self):
-        while True:
-            message = self.socket.recv(BUFF_SIZE)
+class ServerConnection(MessageChannel):
+    def __init__(self, server: Server, socket: sock.socket):
+        super().__init__(socket)
+        self.server = server
 
-    def start(self):
-        threading.Thread(target=self.message_loop).start()
+    def on_message_received(self, message):
+        print(str(message, "UTF-8"), end='')
+        self.server.broadcast_message(self, message)
