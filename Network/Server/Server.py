@@ -14,6 +14,12 @@ class Server:
         # démare le serveur
         Thread(target=self.__connection_loop).start()
 
+    def unregister(self, connection):
+        self.connections.remove(connection)
+        msg = f"Une connection s'est terminée."
+        print(msg)  # Print sur le serveur
+        self.broadcast_message(connection, bytes(msg, "UTF-8"))  # pour les autres
+
     def broadcast_message(self, sender, message):
         """
         diffuse un message à tout les clients connectés au serveur.

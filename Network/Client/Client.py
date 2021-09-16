@@ -1,7 +1,7 @@
 from Network.MessageChannel import MessageChannel
 
 import socket as sock
-
+from datetime import datetime
 
 class Client(MessageChannel):
     """
@@ -13,7 +13,9 @@ class Client(MessageChannel):
         self.name = name
 
     def send_message(self, message: bytes):
-        super().send_message(bytes(self.name, "UTF-8") + b" a dit : " + message)
+        date = datetime.now().strftime("%H:%M:%S")
+        complete_message = f"[{date}] {self.name} a dit : "
+        super().send_message(bytes(complete_message, "UTF-8") + message)
 
     def on_message_received(self, message):
         """

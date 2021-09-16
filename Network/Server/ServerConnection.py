@@ -12,3 +12,8 @@ class ServerConnection(MessageChannel):
     def on_message_received(self, message):
         print(str(message, "UTF-8"), end='')
         self.server.broadcast_message(self, message)
+
+    def close(self):
+        super().close()
+        self.server.unregister(self)
+

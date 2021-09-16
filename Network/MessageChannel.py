@@ -31,6 +31,10 @@ class MessageChannel:
         self.socket.close()
 
     def __loop(self):
-        while self.listen:
-            message = self.socket.recv(BUFF_SIZE)
-            self.on_message_received(message)
+        try:
+            while self.listen:
+                message = self.socket.recv(BUFF_SIZE)
+                self.on_message_received(message)
+        except:
+            self.close()
+            # raise
