@@ -8,9 +8,6 @@ print("Bienvenue dans la messagerie hyper sofistiquée de Maxime et l'autre")
 IP = "127.0.0.1"
 PORT = 48483
 
-BUFF_SIZE = 2048
-
-
 def start():
     socket = sock.socket(sock.AF_INET, sock.SOCK_STREAM)
 
