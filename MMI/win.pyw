@@ -1,17 +1,17 @@
-import socket
+import socket as sock
 from tkinter import *
 import threading
+
+from MMI.GraphicClient import GraphicClient
+from Network.Client.Client import Client
+from Network.MessageChannel import MessageChannel
 
 IP = "127.0.0.1"
 PORT = 48483
 ADDRESS = (IP, PORT)
 FORMAT = "utf-8"
 
-client = socket.socket(socket.AF_INET,
-                       socket.SOCK_STREAM)
-client.connect(ADDRESS)
-
-class Login:
+class MMI:
 
     def __init__(self):
         self.Window = Tk()
@@ -59,13 +59,12 @@ class Login:
 
         self.go.place(relx=0.4,
                       rely=0.55)
+        self.client = None
         self.Window.mainloop()
 
     def goAhead(self, name):
         self.login.destroy()
         self.layout(name)
-        rcv = threading.Thread(target=self.receive)
-        rcv.start()
 
     def getname(self) -> str:
             return self.entryName.get()
@@ -134,7 +133,7 @@ class Login:
                                     font="Helvetica 10 bold",
                                     width=20,
                                     bg="#ABB2B9",
-                                    command=lambda: self.sendButton(self.entryMsg.get()))
+                                    command=lambda: self.sendButton(self.client, self.entryMsg.get()))
 
             self.buttonMsg.place(relx=0.77,
                                  rely=0.008,
@@ -152,43 +151,28 @@ class Login:
 
             self.textCons.config(state=DISABLED)
 
-    def sendButton(self, msg):
-        self.textCons.config(state = DISABLED)
-        self.msg=msg
-        self.entryMsg.delete(0, END)
-        self.sendMessage()
+            socket = sock.socket(sock.AF_INET, sock.SOCK_STREAM)
+            socket.connect((IP, PORT))
+            self.client = GraphicClient(self.textCons, name, socket)
 
-    def receive(self):
-        while True:
-            try:
-                message = client.recv(1024).decode(FORMAT)
+    def pushMessage(self, message):
+        self.textCons.config(state=NORMAL)
+        self.textCons.insert(END, message + "\n")
 
-                if message == 'NAME':
-                    client.send(self.name.encode(FORMAT))
-                else:
-
-                    self.textCons.config(state=NORMAL)
-                    self.textCons.insert(END,
-                                         message + "\n\n")
-
-                    self.textCons.config(state=DISABLED)
-                    self.textCons.see(END)
-            except:
-
-                print("An error occured!")
-                client.close()
-                break
-
-    def sendMessage(self):
         self.textCons.config(state=DISABLED)
-        while True:
-            message = (f"{self.name}: {self.msg}")
-            client.send(message.encode(FORMAT))
-            break
+        self.textCons.see(END)
+
+    def sendButton(self, channel: MessageChannel, msg):
+        self.textCons.config(state = DISABLED)
+        self.entryMsg.delete(0, END)
+        msg = bytes(msg, "UTF-8")
+        channel.send_message(msg)
+        self.pushMessage(str(Client.format_message(msg, self.name), "UTF-8"))
+
 
 
 
 if __name__ == '__main__':
-    m = Login()
+    m = MMI()
     print(m.getname())
 

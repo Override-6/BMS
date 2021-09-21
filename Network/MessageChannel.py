@@ -15,7 +15,7 @@ class MessageChannel:
     @staticmethod
     def __remove_trailing_crlf(seq):
         while seq.endswith(b"\n"):
-            seq = seq[0:len(seq) - 2]
+            seq = seq[0:len(seq) - 1]
         return seq
 
     def send_message(self, message: bytes):
@@ -32,9 +32,9 @@ class MessageChannel:
 
     def __loop(self):
         try:
-            while self.listen:
+            while True:
                 message = self.socket.recv(BUFF_SIZE)
                 self.on_message_received(message)
         except:
             self.close()
-            # raise
+            raise
