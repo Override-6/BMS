@@ -11,7 +11,7 @@ class Server:
         self.accept_connections = True
         self.connections: List[ServerConnection] = []
         self.messages: List[bytes] = []
-        # démare le serveur
+        # démmare le serveur
         Thread(target=self.__connection_loop).start()
 
     def unregister(self, connection):
@@ -23,7 +23,7 @@ class Server:
     def broadcast_message(self, sender, message):
         """
         diffuse un message à tout les clients connectés au serveur.
-        :param sender: le ServerConnection qui broadcast le message.
+        :param sender : le ServerConnection qui broadcast le message.
         :param message: le message à diffuser
         """
         # Le message est gardé pour faire en sorte que les connections qui arrivent en cours de route
