@@ -10,7 +10,7 @@ class Server:
         self.serversocket = serversocket
         self.accept_connections = True
         self.connections: List[ServerConnection] = []
-        self.messages = []
+        self.messages: List[bytes] = []
         # démare le serveur
         Thread(target=self.__connection_loop).start()
 
@@ -35,7 +35,7 @@ class Server:
             if connection is not sender:
                 connection.send_message(message)
 
-    def handle_new_connection(self, client_socket):
+    def __handle_new_connection(self, client_socket):
         """
         Gère un nouveau client.
         le socket et "wrappé" dans un ServerConnection,
@@ -58,4 +58,4 @@ class Server:
             print("Socket Loop -> En attente du prochain client...")
             client_socket, address = self.serversocket.accept()  # On accepte le prochain client, renvoie un tuple (Socket, Adress)
             print("Socket Loop -> Nouveau client connecté :", client_socket)
-            self.handle_new_connection(client_socket)
+            self.__handle_new_connection(client_socket)
