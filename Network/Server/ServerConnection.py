@@ -5,7 +5,14 @@ from Network.Server.Server import Server
 
 
 class ServerConnection(MessageChannel):
+    """
+    Représente une des connections Serveur-Client.
+    """
     def __init__(self, server: Server, socket: sock.socket):
+        """
+        :param server: Le serveur
+        :param socket: le socket de la connection client-serveur
+        """
         super().__init__(socket)
         self.server = server
 
@@ -14,6 +21,9 @@ class ServerConnection(MessageChannel):
         self.server.broadcast_message(self, message)
 
     def close(self):
+        """
+        Ferme la connection et se désenregistre du serveur.
+        """
         super().close()
         self.server.unregister(self)
 

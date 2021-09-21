@@ -2,19 +2,28 @@ import socket as sock
 from threading import Thread
 from typing import List
 
-
 class Server:
+    """
+    Classe serveur, se charge de dispatcher les messages reçu par les ServerConnections,
+    et de sotquer les connectuons
+    """
     def __init__(self, serversocket: sock.socket):
+        """
+        :param serversocket: Le socket du serveur
+        """
         from Network.Server.ServerConnection import ServerConnection
 
         self.serversocket = serversocket
         self.accept_connections = True
         self.connections: List[ServerConnection] = []
         self.messages: List[bytes] = []
-        # démmare le serveur
+        # démmare le thread qui se charge d'accepter les connections
         Thread(target=self.__connection_loop).start()
 
     def unregister(self, connection):
+        """
+        :param connection: la connection à désenregistrer
+        """
         self.connections.remove(connection)
         msg = f"Une connection s'est terminée."
         print(msg)  # Print sur le serveur
