@@ -14,22 +14,25 @@ FORMAT = "utf-8"
 class MMI:
 
     def __init__(self):
+        #création de la fenêtre tkinter
         self.Window = Tk()
         self.Window.withdraw()
-
+        #création widget (interaction avec l'utilisateur)
         self.login = Toplevel()
-
+        #paramettre de la fenêtre
         self.login.title("Connection")
+        #taille non-changeable
         self.login.resizable(width=False,
                              height=False)
+        #taille définie
         self.login.configure(width=400,
                              height=400)
-
+        #création du texte
         self.pls = Label(self.login,
                          text="Merci de vous connecter pour continuer",
                          justify=CENTER,
                          font="Roboto 14 bold")
-
+        #placement dans la fenêtre
         self.pls.place(relheight=0.2,
                        relx=0.01,
                        rely=0.07)
